@@ -1,13 +1,35 @@
-JqueryAutocomplete
+JqueryAutocompleteHelper
 ==================
 
-Introduction goes here.
+This helper is to use jquery's autocomplete to look up a value and insert it into a hidden form field.  Useful for linking a join model to another model.
 
 
 Example
 =======
 
-Example goes here.
+view:
+
+<% form_for @organization do |f| %>
+  <p>
+    <%= f.label :person_id %><br />
+   <%= auto_complete_field(:organization, :person) %>
+  </p>
+....
+<script type="text/javascript">
+<%= yield :runview %>
+</script>
 
 
-Copyright (c) 2009 [name of plugin creator], released under the MIT license
+controller for person:
+
+def index
+  @people = Person.search(params[:q])
+
+  respond_to do |format|
+    format.html  { ... }
+    format.xml  { ... }
+    format.js { render :text => @people.map { |c| "#{c.display_name}|#{c.id}\n" } }
+  end
+end
+
+Copyright (c) 2009 David Morton <dgm@dgrmm.net>, released under the MIT license
