@@ -16,7 +16,7 @@ view:
 <% form_for @organization do |f| %>
   <p>
     <%= f.label :person_id %><br />
-   <%= auto_complete_field(:organization, :person) %>
+   <%= f.autocomplete_field(:person_id. :url => people_path) %>
   </p>
 ....
 <script type="text/javascript">
