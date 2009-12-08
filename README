@@ -7,6 +7,10 @@ This helper is to use jquery's autocomplete to look up a value and insert it int
 Example
 =======
 
+This plugin assumes:
+
+The model being search has a method called display_name
+
 view:
 
 <% form_for @organization do |f| %>
