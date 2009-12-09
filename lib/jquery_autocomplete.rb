@@ -2,9 +2,20 @@
 
 module ActionView
   module Helpers
+    module CaptureHelper
+      def javascript_content_for(name, content = nil, &block)
+        ivar = "@content_for_#{name}_parts"
+        jvar = "@content_for_#{name}"
+        content = capture(&block) if block_given?
+        instance_variable_set(ivar, "#{instance_variable_get(ivar)}#{content}")
+        instance_variable_set(jvar, %Q(<script type="text/javascript">#{instance_variable_get(ivar)}</script>))
+        nil
+      end
+    end
+
     module  FormHelper
        def autocomplete_field(object_name, method, options = {})
-         content_for :runview do
+         javascript_content_for :runview do
            InstanceTag.new(object_name, method, self, options.delete(:object)).to_jquery_autocomplete_script(options)
          end
           InstanceTag.new(object_name, method, self, options.delete(:object)).to_autocomplete_field_tag(options)
