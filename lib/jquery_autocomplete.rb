@@ -101,3 +101,12 @@ module ActionView
   end
 end
 
+module Formtastic
+  module AutoComplete
+    protected
+    def autocomplete_input(method, options = {})
+      self.label(method, options_for_label(options)) <<
+      self.autocomplete_field(method, options)
+    end
+  end
+end
