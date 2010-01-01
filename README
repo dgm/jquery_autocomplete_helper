@@ -1,7 +1,8 @@
 JqueryAutocompleteHelper
 ==================
 
-This helper is to use jquery's autocomplete to look up a value and insert it into a hidden form field.  Useful for linking a join model to another model.
+This helper uses jquery's autocomplete to look up a value and insert it into a hidden form field.  
+Useful for linking a join model to another model when there are too many records for a select field.
 
 
 Example
@@ -9,7 +10,13 @@ Example
 
 This plugin assumes:
 
-The model being search has a method called display_name
+The model being searched has a method called display_name:
+
+class Person < ActiveRecord::Base
+ def display_name
+   first_name + " " + last_name
+ end
+end
 
 view:
 
@@ -19,15 +26,13 @@ view:
    <%= f.autocomplete_field(:person_id. :url => people_path) %>
   </p>
 ....
-<script type="text/javascript">
 <%= yield :runview %>
-</script>
 
 
-controller for person:
+The controller for person needs to search based on params[:q] :
 
 def index
-  @people = Person.search(params[:q])
+  @people = Person.find(:all, :conditions => ["first_name LIKE ? or last_name LIKE ?", '%'+q + '%', '%'+q + '%' ], :limit => 20)
 
   respond_to do |format|
     format.html  { ... }
@@ -35,5 +40,15 @@ def index
     format.js { render :text => @people.map { |c| "#{c.display_name}|#{c.id}\n" } }
   end
 end
+
+Formtastic forms are also supported:
+
+<% semantic_form_for @organization do |f| %>
+<% f.inputs do %>
+   <%= f.input :person_id, :as => :autocomplete, :url => people_path %>
+<% end %>
+....
+<%= yield :runview %>
+
 
 Copyright (c) 2009 David Morton <dgm@dgrmm.net>, released under the MIT license
