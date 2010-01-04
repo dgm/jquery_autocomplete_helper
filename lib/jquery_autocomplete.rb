@@ -35,8 +35,12 @@ module ActionView
 
         options["type"] = "text"
         options_value = options['value']
-        options["value"] ||= search_value_before_type_cast(object)
-        options["value"] &&= html_escape(options["value"])
+        if options["display_value"]
+           options["value"] = html_escape(options["display_value"])
+        else
+          options["value"] ||= search_value_before_type_cast(object)
+          options["value"] &&= html_escape(options["value"])
+        end
         options_id = options["id"]  #store for later
         options_name = options["name"] #store for later
 
@@ -49,6 +53,7 @@ module ActionView
         options.delete("url")
         options["id"] = options_id
         options["name"] = options_name
+        options.delete("display_value")
         options['value'] = options_value
         options["value"] ||= value_before_type_cast(object)
         options["value"] &&= html_escape(options["value"])
