@@ -8,7 +8,11 @@ module ActionView
         jvar = "@content_for_#{name}"
         content = capture(&block) if block_given?
         instance_variable_set(ivar, "#{instance_variable_get(ivar)}#{content}")
-        instance_variable_set(jvar, %Q(<script type="text/javascript">#{instance_variable_get(ivar)}</script>))
+        if  "".respond_to? :html_safe!
+          instance_variable_set(jvar, %Q(<script type="text/javascript">#{instance_variable_get(ivar)}</script>)).html_safe!
+        else
+          instance_variable_set(jvar, %Q(<script type="text/javascript">#{instance_variable_get(ivar)}</script>))
+        end
         nil
       end
     end
