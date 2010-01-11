@@ -32,6 +32,8 @@ module ActionView
         options = options.stringify_keys
         options["size"] = options["maxlength"] || DEFAULT_FIELD_OPTIONS["size"] unless options.key?("size")
         options = DEFAULT_FIELD_OPTIONS.merge(options)
+        options.delete("create_prompt")
+        options.delete("create_value")
 
         options["type"] = "text"
         options_value = options['value']
@@ -64,14 +66,28 @@ module ActionView
       end
 
       def to_jquery_autocomplete_script(options = {})
+        options[:create_prompt] ||= "Create new entry?"
+        options[:create_value] ||= "AUTOCOMPLETE_NEW"
         jcode =<<-EOC
         $("#ac_#{search_tag_id}").autocomplete("#{options[:url]}", {
            width: 260,
            selectFirst: false
         });
         $("#ac_#{search_tag_id}").result(function(event, data, formatted) {
-           if (data)
+           if (data) {
              $(this).next().val(data[1]);
+           } else {
+             if ($(this).val() && confirm("#{options[:create_prompt]}")) {
+               $(this).next().val("#{options[:create_value]}");
+             } else {
+               $(this).next().val("");
+             }
+           }
+        });
+        $("#ac_#{search_tag_id}").blur(function() {
+           if ($(".ac_results").size() == 0 || $(".ac_results").css("display") == "none") {
+             $("#ac_organization_person_organization").search();
+           }
         });
         EOC
       end
