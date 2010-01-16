@@ -37,7 +37,7 @@ module ActionView
 
         options["type"] = "text"
         options_value = options['value']
-        if options["display_value"]
+        if options.has_key? "display_value"
            options["value"] = html_escape(options["display_value"])
         else
           options["value"] ||= search_value_before_type_cast(object)
