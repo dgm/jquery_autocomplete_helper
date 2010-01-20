@@ -34,6 +34,7 @@ module ActionView
         options = DEFAULT_FIELD_OPTIONS.merge(options)
         options.delete("create_prompt")
         options.delete("create_value")
+        options.delete("new_callback")
 
         options["type"] = "text"
         options_value = options['value']
@@ -78,7 +79,15 @@ module ActionView
              $(this).next().val(data[1]);
            } else {
              if ($(this).val() && confirm("#{options[:create_prompt]}")) {
+EOC
+        if options.has_key? :new_callback
+          jcode += options[:new_callback]
+        else
+          jcode +=<<-EOC
                $(this).next().val("#{options[:create_value]}");
+          EOC
+        end
+         jcode +=<<-EOC
              } else {
                $(this).next().val("");
              }

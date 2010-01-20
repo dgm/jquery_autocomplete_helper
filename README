@@ -53,6 +53,18 @@ Formtastic forms are also supported:
 Override the display value with :display_value if the relation name doesn't match the id name:
 <%= f.input :parent_id, :as => :autocomplete, :url => people_path, :display_value => @person.household_parent.display_name %>
 
+Add a javascript callback to add new models vi :new_callback
+
+<script type="text/javascript">
+  function open_person_form() {
+  ...   
+}
+</script>
+
+
+ <%= f.input :person_id, :as => :autocomplete, :url => people_path, :new_callback => "open_person_form();" %>
+
+
 
 
 Copyright (c) 2009 David Morton <dgm@dgrmm.net>, released under the MIT license
