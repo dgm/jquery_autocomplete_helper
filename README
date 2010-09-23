@@ -20,7 +20,7 @@ end
 
 view:
 
-<% form_for @organization do |f| %>
+<%= form_for @organization do |f| %>
   <p>
     <%= f.label :person_id %><br />
    <%= f.autocomplete_field(:person_id. :url => people_path) %>
@@ -43,7 +43,7 @@ end
 
 Formtastic forms are also supported:
 
-<% semantic_form_for @organization do |f| %>
+<%= semantic_form_for @organization do |f| %>
 <% f.inputs do %>
    <%= f.input :person_id, :as => :autocomplete, :url => people_path %>
 <% end %>
