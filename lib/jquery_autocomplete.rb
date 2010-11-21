@@ -128,6 +128,7 @@ module ActionView
                 }
         });
         EOC
+        jcode.html_safe
       end
 
       private
